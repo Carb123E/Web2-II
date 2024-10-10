@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>search</title>
+    <link href="css/style.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="lyear-layout-web">
+        <div class="lyear-layout-container">
+            <aside class="lyear-layout-sidebar">
+                <ul class="nav nav-drawer">
+                    <li> <a href="home.html">home</a> </li>
+                    <li> <a href="fundraiser.html">fundraiser</a> </li>
+                    <li> <a href="search.html">searchFundraisers</a> </li>
+                </ul>
+            </aside>
+            <header class="lyear-layout-header">
+                <nav class="navbar navbar-default">
+                    <div class="topbar">
+                        <div class="topbar-left">
+                            <span class="navbar-page-title">search fundraisers</span>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+            <main class="lyear-layout-content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="card" style="background: #bcc6ed;">
+                            <div class="form-group col-md-6">
+                                <label for="FUNDRAISER_ID">FUNDRAISER_ID</label>
+                                <input type="text" class="form-control" id="FUNDRAISER_ID" name="FUNDRAISER_ID"
+                                    value="" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="CITY">CITY</label>
+                                <input type="text" class="form-control" id="CITY" name="CITY" value="" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="CATEGORY_ID">CATEGORY_ID</label>
+                                <select name="CATEGORY_ID" style="width: 150px;" class="form-control" id="CATEGORY_ID">
+                                </select>
+                            </div>
+                            <button type="button" id="button2" class="btn btn-primary ajax-post"
+                                style="margin-left: 25px;">query</button>
+                            <button type="button" id="button3" class="btn btn-primary ajax-post"
+                                style="margin-left: 25px;">Clear</button>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>FUNDRAISER_ID</th>
+                                            <th>ORGANIZER</th>
+                                            <th>CAPTION</th>
+                                            <th>TARGET_FUNDING</th>
+                                            <th>CURRENT_FUNDING</th>
+                                            <th>CITY</th>
+                                            <th>ACTIVE</th>
+                                            <th>CATEGORY_ID</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+                                        <!-- tbody -->
+                                    </tbody>
+                                </table>
+                                <div style="font-weight: bold;color: #f00;text-align: center;" id="note">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function ajax(obj) {
+            let type = obj.type;
+            let url = obj.url;
+            let callback = obj.callback;
+            let xhr = new XMLHttpRequest();
+            xhr.open(type, url);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if (xhr.responseText) {
+                    callback(JSON.parse(xhr.responseText));
+                } else {
+                    callback('');
+                }
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function init() {
+            ajax({
+                url: "http://localhost:9001/api/getCategoriesList",
+                type: "get",
+                callback: function (data) {
+                    console.log(data);
+                    if (data.length) {
+                        let tbodyinnerHTML = ''
+                        data.map((item) => {
+                            tbodyinnerHTML += `<option value=${item.CATEGORY_ID}>${item.NAME}</option>`
+                        })
+                        document.getElementById("CATEGORY_ID").innerHTML = tbodyinnerHTML;
+                    }
+                }
+            });
+        }
+        init();
+        document.getElementById('button2').onclick = function () {
+            let FUNDRAISER_ID = document.getElementById('FUNDRAISER_ID').value
+            let CITY = document.getElementById('CITY').value
+            let CATEGORY_ID = document.getElementById('CATEGORY_ID').value
+            if (!FUNDRAISER_ID && !CITY && !CATEGORY_ID) {
+                alert('Web users must select at least one criteria !')
+                return
+            }
+            ajax({
+                url: `http://localhost:9001/api/getFundraisersListByType?FUNDRAISER_ID=${FUNDRAISER_ID}&CITY=${CITY}&CATEGORY_ID=${CATEGORY_ID}`,
+                type: "get",
+                callback: function (data) {
+                    console.log(data);
+                    let tbodyinnerHTML = ''
+                    if (data.length) {
+                        data.map((item) => {
+                            tbodyinnerHTML += `<tr>
+                                <th><a href="fundraiser.html?${item.FUNDRAISER_ID}">${item.FUNDRAISER_ID}</a></th>
+                                <th>${item.ORGANIZER}</th>
+                                <th>${item.CAPTION}</th>
+                                <th>${item.TARGET_FUNDING}</th>
+                                <th>${item.CURRENT_FUNDING}</th>
+                                <th>${item.CITY}</th>
+                                <th>${item.ACTIVE}</th>
+                                <th>${item.CATEGORY_ID}</th>
+                            </tr>`
+                        })
+                        document.getElementById("tbody").innerHTML = tbodyinnerHTML;
+                        document.getElementById("note").innerHTML = '';
+                    } else {
+                        document.getElementById("tbody").innerHTML = '';
+                        document.getElementById("note").innerHTML = 'no fundraisers are found';
+                    }
+                }
+            });
+        };
+        document.getElementById('button3').onclick = function () {
+            document.getElementById('FUNDRAISER_ID').value = ''
+            document.getElementById('CITY').value = ''
+            document.getElementById('CATEGORY_ID').value = ''
+        };
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>home</title>
+    <link href="css/style.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="lyear-layout-web">
+        <div class="lyear-layout-container">
+            <aside class="lyear-layout-sidebar">
+                <ul class="nav nav-drawer">
+                    <li> <a href="home.html">home</a> </li>
+                    <li> <a href="fundraiser.html">fundraiser</a> </li>
+                    <li> <a href="search.html">searchFundraisers</a> </li>
+                </ul>
+            </aside>
+            <header class="lyear-layout-header">
+                <nav class="navbar navbar-default">
+                    <div class="topbar">
+                        <div class="topbar-left">
+                            <span class="navbar-page-title">Active fundraisers</span>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+            <main class="lyear-layout-content">
+                <div class="container-fluid">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>FUNDRAISER_ID</th>
+                                            <th>ORGANIZER</th>
+                                            <th>CAPTION</th>
+                                            <th>TARGET_FUNDING</th>
+                                            <th>CURRENT_FUNDING</th>
+                                            <th>CITY</th>
+                                            <th>ACTIVE</th>
+                                            <th>CATEGORY_ID</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+                                        <!-- tbody -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function ajax(obj) {
+            let type = obj.type;
+            let url = obj.url;
+            let callback = obj.callback;
+            let xhr = new XMLHttpRequest();
+            xhr.open(type, url);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                callback(JSON.parse(xhr.responseText));
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function init() {
+            ajax({
+                url: "http://localhost:9001/api/getFundraisersListActive?active=Active",
+                type: "get",
+                callback: function (data) {
+                    console.log(data);
+                    if (data.length) {
+                        let tbodyinnerHTML = ''
+                        data.map((item) => {
+                            tbodyinnerHTML += `<tr>
+                                <th>${item.FUNDRAISER_ID}</th>
+                                <th>${item.ORGANIZER}</th>
+                                <th>${item.CAPTION}</th>
+                                <th>${item.TARGET_FUNDING}</th>
+                                <th>${item.CURRENT_FUNDING}</th>
+                                <th>${item.CITY}</th>
+                                <th>${item.ACTIVE}</th>
+                                <th>${item.CATEGORY_ID}</th>
+                            </tr>`
+                        })
+                        document.getElementById("tbody").innerHTML = tbodyinnerHTML;
+                    }
+                }
+            });
+        }
+        init()
+    </script>
+</body>
+
+</html>
