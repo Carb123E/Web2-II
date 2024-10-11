@@ -3,10 +3,10 @@ class DBPool {
 		this.mysql = require("mysql");
 		this.config = {
 			host: 'localhost', 
-			port: 3306, 
-			user: 'root', 
-			password: 'admin',
-			database: 'crowdFunding', 
+			// port: 3306, 
+			user: 'hhan15', 
+			password: 'Hhb091212.',
+			database: 'hhan15_crowdFunding', 
 			connectionLimit: 10, 
 			multipleStatements: false, 
 			waitForConnections: true, 

@@ -3,7 +3,7 @@ var app = require("express").Router();
 const DBPool = require('./crowdfunding_db.js')
 // test cpanel
 app.get("/api/", (req, res) => {
-    let searchSql = 'SELECT * from `CATEGORY`'
+    let searchSql = 'SELECT * from `category`'
     DBPool.query(searchSql, [], (results) => {
         let result = results.results
         res.send(result);
@@ -99,7 +99,7 @@ app.get("/api/getFundraisersListByFUNDRAISERID", (req, res) => {
 });
 //all categories
 app.get("/api/getCategoriesList", (req, res) => {
-    let searchSql = 'SELECT * from `CATEGORY`'
+    let searchSql = 'SELECT * from `category`'
     DBPool.query(searchSql, [], (results) => {
         let result = results.results
         res.send(result);
