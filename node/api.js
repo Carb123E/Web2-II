@@ -2,9 +2,21 @@
 var app = require("express").Router();
 const DBPool = require('./crowdfunding_db.js')
 
+// add fundraiser
+app.post('/api/addFundraiser', (req, res) => {
+    let param = req.body
+    var addSql =
+        'INSERT INTO `FUNDRAISER`(`ID`,`FUNDRAISER_ID`,`ORGANIZER`,`CAPTION`,`TARGET_FUNDING`,`CURRENT_FUNDING`,`CITY`,`ACTIVE`,`CATEGORY_ID`) VALUES(?,?,?,?,?,?,?,?)';
+    var addSqlParams = [new Date.getTime(), param.FUNDRAISER_ID, param.ORGANIZER, param.CAPTION, param.TARGET_FUNDING, param.CURRENT_FUNDING, param.CITY, param.ACTIVE, param.CATEGORY_ID];
+    DBPool.query(addSql, addSqlParams, (results) => {
+        res.send({
+            res: 'success！'
+        });
+    })
+});
 // all fundraisers
 app.get('/api/getFundraisersList', (req, res) => {
-    let searchSql = 'SELECT * from `FUNDRAISER`'
+    let searchSql = 'SELECT * from `FUNDRAISER` order by ID DESC'
     DBPool.query(searchSql, [], (results) => {
         let result = results.results
         res.send(result);
