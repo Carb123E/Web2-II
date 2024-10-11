@@ -2,12 +2,22 @@
 var app = require("express").Router();
 const DBPool = require('./crowdfunding_db.js')
 
+// delete fundraiser
+app.delete('/api/deleteFundraiser', (req, res) => {
+    let param = req.query
+	DBPool.query('delete from FUNDRAISER where ID = ?', [param.ID], (results) => {
+		let result = results.results
+		res.send({
+            res: 'delete success！'
+        })
+	})
+});
 // add fundraiser
 app.post('/api/addFundraiser', (req, res) => {
     let param = req.body
     var addSql =
-        'INSERT INTO `FUNDRAISER`(`ID`,`FUNDRAISER_ID`,`ORGANIZER`,`CAPTION`,`TARGET_FUNDING`,`CURRENT_FUNDING`,`CITY`,`ACTIVE`,`CATEGORY_ID`) VALUES(?,?,?,?,?,?,?,?)';
-    var addSqlParams = [new Date.getTime(), param.FUNDRAISER_ID, param.ORGANIZER, param.CAPTION, param.TARGET_FUNDING, param.CURRENT_FUNDING, param.CITY, param.ACTIVE, param.CATEGORY_ID];
+        'INSERT INTO `FUNDRAISER`(`ID`,`FUNDRAISER_ID`,`ORGANIZER`,`CAPTION`,`TARGET_FUNDING`,`CURRENT_FUNDING`,`CITY`,`ACTIVE`,`CATEGORY_ID`) VALUES(?,?,?,?,?,?,?,?,?)';
+    var addSqlParams = [new Date().getTime(), param.FUNDRAISER_ID, param.ORGANIZER, param.CAPTION, param.TARGET_FUNDING, param.CURRENT_FUNDING, param.CITY, param.ACTIVE, param.CATEGORY_ID];
     DBPool.query(addSql, addSqlParams, (results) => {
         res.send({
             res: 'success！'
@@ -90,8 +100,17 @@ app.get("/api/getCategoriesList", (req, res) => {
 });
 //the list of donations
 app.get("/api/getDonations", (req, res) => {
-    let searchSql = 'SELECT * from `CATEGORY`'
+    let searchSql = 'SELECT * from `donation` order by DATE DESC'
     DBPool.query(searchSql, [], (results) => {
+        let result = results.results
+        res.send(result);
+    })
+});
+//the list of donations by ByFUNDRAISERID
+app.get("/api/getDonationsByFUNDRAISERID", (req, res) => {
+    let param = req.query
+    let searchSql = 'SELECT * from `donation` WHERE FUNDRAISER_ID = ? order by DATE DESC'
+    DBPool.query(searchSql, [param.FUNDRAISER_ID], (results) => {
         let result = results.results
         res.send(result);
     })
