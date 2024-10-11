@@ -2868,12 +2868,13 @@ dd, dt {
  * 头部信息
  -------------------------------------- */
 .lyear-layout-header {
+    text-align: center;
     position: fixed;
     top: 0;
     right: 0;
     left: 0;
     z-index: 4;
-    padding-left: 240px;
+    /* padding-left: 240px; */
     background-color: #bcc6ed;
     -webkit-transition: padding 0.3s;
     transition: padding 0.3s;
@@ -2905,9 +2906,12 @@ dd, dt {
 }
 .topbar .topbar-left {
     display: -webkit-box;
+    width: 100%;
     display: flex;
+    justify-content: center;
     -webkit-box-align: center;
     align-items: center;
+    font-weight: bold;
 }
 .topbar .topbar-right {
     display: -webkit-box;
@@ -4543,8 +4547,8 @@ body[data-theme='translucent'] .jconfirm {
     border-color: rgba(255, 255, 255, .35);
 }
 .main{
-    width: calc(100% - 240px);
-    margin-left: 240px;
+    /* width: calc(100% - 240px); */
+    /* margin-left: 240px; */
     padding: 20px;
     margin-top: 60px;
 }

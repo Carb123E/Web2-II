@@ -7,80 +7,108 @@
     <title>search</title>
     <link href="css/style.min.css" rel="stylesheet">
     <script type="text/javascript" src="./angular.min.js"></script>
+    <style>
+        .ADMINBOX .row {
+            display: flex;
+            margin: 10px;
+        }
+
+        .ADMINBOX .row1 {
+            width: 150px;
+            text-align: right;
+        }
+    </style>
 </head>
 
 <body>
-    <div ng-app="donationApp" ng-controller="donationCtrl" class="lyear-layout-web">
+    <div ng-app="adminApp" ng-controller="adminCtrl" class="lyear-layout-web">
         <div class="lyear-layout-container">
-            <aside class="lyear-layout-sidebar">
+            <!-- <aside class="lyear-layout-sidebar">
                 <ul class="nav nav-drawer">
                     <li> <a href="../html/search.html">Back</a> </li>
                 </ul>
-            </aside>
+            </aside> -->
             <header class="lyear-layout-header">
                 <nav class="navbar navbar-default">
                     <div class="topbar">
                         <div class="topbar-left">
-                            <span class="navbar-page-title">search fundraisers</span>
+                            <span class="navbar-page-title">fundraisers manage</span>
                         </div>
                     </div>
                 </nav>
             </header>
-            <main class="main" style="display: flex;">
-                <div class="row">
-                    <div style="display: flex;">
-                        <div style="width: 50%;display: flex;flex-direction: column;">
-                            <div class="box1">
-                                details of the selected fundraiser
-                            </div>
-                            <div class="box1">
-                                <label>FUNDRAISER_ID:</label>
-                                <span>{{param.FUNDRAISER_ID}}</span>
-                            </div>
-                            <div class="box1">
-                                <label>ORGANIZER:</label>
-                                <span id="">{{param.ORGANIZER}}</span>
-                            </div>
-                            <div class="box1">
-                                <label>CAPTION:</label>
-                                <span id="">{{param.CAPTION}}</span>
-                            </div>
-                            <div class="box1">
-                                <label>TARGET_FUNDING:</label>
-                                <span id="">{{param.TARGET_FUNDING}}</span>
-                            </div>
-                            <div class="box1">
-                                <label>CURRENT_FUNDING:</label>
-                                <span id="">{{param.CURRENT_FUNDING}}</span>
-                            </div>
-                            <div class="box1">
-                                <label>CITY:</label>
-                                <span id="">{{param.CITY}}</span>
-                            </div>
-                            <div class="box1">
-                                <label>ACTIVE:</label>
-                                <span id="">{{param.ACTIVE}}</span>
-                            </div>
-                            <div class="box1">
-                                <label>CATEGORY_ID:</label>
-                                <span id="">{{param.CATEGORY_ID}}</span>
-                            </div>
-                            <div>
-                                <img ng-src="{{'./images/' + param.FUNDRAISER_ID + '.jpg'}}" alt=""
-                                    style="width: 400px;height: 100%;">
-                            </div>
-                        </div>
-
-                        <div style="width: 50%;padding: 50px;">
+            <main class="main">
+                <div class="row" style="display: flex;">
+                    <div style="width: 60%;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>FUNDRAISER_ID</th>
+                                    <th>ORGANIZER</th>
+                                    <th>CAPTION</th>
+                                    <th>TARGET_FUNDING</th>
+                                    <th>CURRENT_FUNDING</th>
+                                    <th>CITY</th>
+                                    <th>ACTIVE</th>
+                                    <th>CATEGORY_ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in list">
+                                    <td>{{item.FUNDRAISER_ID}}
+                                    </td>
+                                    <td>{{item.ORGANIZER}}</td>
+                                    <td>{{item.CAPTION}}</td>
+                                    <td>{{item.TARGET_FUNDING}}</td>
+                                    <td>{{item.CURRENT_FUNDING}}</td>
+                                    <td>{{item.CITY}}</td>
+                                    <td>{{item.ACTIVE}}</td>
+                                    <td>{{item.CATEGORY_ID}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="width: 40%;margin: 20px;border: 1px solid #000;border-radius: 10px;">
+                        <div style="padding: 50px;" class="ADMINBOX">
                             <form novalidate>
-                                donation Name:<br>
-                                <input type="text" ng-model="name"><br>
-                                donation money:<br>
-                                <input type="text" ng-model="money">
-                                <br>
-                                <br>
-                                <button ng-click="add()">Submit my donation</button>
+                                <div class="row">
+                                    <div class="row1">FUNDRAISER_ID:</div>
+                                    <input type="text" ng-model="FUNDRAISER_ID">
+                                </div>
+                                <div class="row">
+                                    <div class="row1">ORGANIZER:</div>
+                                    <input type="text" ng-model="ORGANIZER">
+                                </div>
+                                <div class="row">
+                                    <div class="row1">CAPTION:</div>
+                                    <input type="text" ng-model="CAPTION">
+                                </div>
+                                <div class="row">
+                                    <div class="row1">TARGET_FUNDING:</div>
+                                    <input type="text" ng-model="TARGET_FUNDING">
+                                </div>
+                                <div class="row">
+                                    <div class="row1">CURRENT_FUNDING:</div>
+                                    <input type="text" ng-model="CURRENT_FUNDING">
+                                </div>
+                                <div class="row">
+                                    <div class="row1">CITY:</div>
+                                    <input type="text" ng-model="CITY">
+                                </div>
+                                <div class="row">
+                                    <div class="row1">ACTIVE:</div>
+                                    <input type="text" ng-model="ACTIVE">
+                                </div>
+                                <div class="row">
+                                    <div class="row1">CATEGORY_ID:</div>
+                                    <select style="width: 150px;" ng-model="CATEGORY_ID">
+                                        <option ng-repeat="x in CATEGORY_IDs" value="{{x.CATEGORY_ID}}">{{x.NAME}}
+                                        </option>
+                                    </select>
+                                </div>
                             </form>
+                            <button type="button" ng-click="Add()" class="btn btn-primary ajax-post"
+                                style="margin-left: 150px;">{{buttontype}}</button>
                         </div>
                     </div>
                 </div>
@@ -88,35 +116,62 @@
         </div>
     </div>
     <script type="text/javascript">
-        var app = angular.module('donationApp', []);
-        app.controller('donationCtrl', function ($scope, $http) {
+        var app = angular.module('adminApp', []);
+        app.controller('adminCtrl', function ($scope, $http) {
             $scope.paraminit = location.search ? location.search.split('?') : ''
-
-            $http.get(`http://localhost:9001/api/getFundraisersListByFUNDRAISERID?FUNDRAISER_ID=${$scope.paraminit[1]}`)
+            $scope.buttontype = 'add fundraiser'
+            $http.get("http://localhost:9001/api/getCategoriesList")
                 .success(function (response) {
-                    $scope.param = response[0];
+                    $scope.CATEGORY_IDs = response;
                 });
-            $scope.add = function () {
-                if(!$scope.name){
-                    alert('donation name is must')
-                    return;
-                }
-                if($scope.money < 5){
-                    alert('the minimum of donation is 5 AUD')
-                    return;
-                }
-                $http.post(`http://localhost:9001/api/addDonations`, {
-                    "DATE": new Date().getTime(),
-                    "AMOUNT": $scope.money,
-                    "name": $scope.name,
-                    "FUNDRAISER_ID": $scope.paraminit[1]
+            
+            $scope.initlist = function () {
+                $http.get(`http://localhost:9001/api/getFundraisersList`)
+                    .success(function (response) {
+                        $scope.list = response;
+                    });
+            }
+            $scope.initlist()
+            $scope.Add = function () {
+                ``, ``, ``, ``, ``, ``, ``, ``
+                $http.post(`http://localhost:9001/api/addFundraiser`, {
+                    "FUNDRAISER_ID": $scope.FUNDRAISER_ID,
+                    "ORGANIZER": $scope.ORGANIZER,
+                    "CAPTION": $scope.CAPTION,
+                    "TARGET_FUNDING": $scope.TARGET_FUNDING,
+                    "CURRENT_FUNDING": $scope.CURRENT_FUNDING,
+                    "CITY": $scope.CITY,
+                    "ACTIVE": $scope.ACTIVE,
+                    "CATEGORY_ID": $scope.CATEGORY_ID,
                 }, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 })
                     .success(function (response) {
-                        alert(`感谢您向${$scope.paraminit[1]}捐款`)
+                        alert(`add success`)
+                        $scope.initlist()
+                    });
+            }
+            $scope.update = function () {
+                ``, ``, ``, ``, ``, ``, ``, ``
+                $http.put(`http://localhost:9001/api/updateFundraiser`, {
+                    "FUNDRAISER_ID": $scope.FUNDRAISER_ID,
+                    "ORGANIZER": $scope.ORGANIZER,
+                    "CAPTION": $scope.CAPTION,
+                    "TARGET_FUNDING": $scope.TARGET_FUNDING,
+                    "CURRENT_FUNDING": $scope.CURRENT_FUNDING,
+                    "CITY": $scope.CITY,
+                    "ACTIVE": $scope.ACTIVE,
+                    "CATEGORY_ID": $scope.CATEGORY_ID,
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .success(function (response) {
+                        alert(`add success`)
+                        $scope.initlist()
                     });
             }
         });
