@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>search</title>
+    <link href="css/style.min.css" rel="stylesheet">
+    <script type="text/javascript" src="./angular.min.js"></script>
+</head>
+
+<body>
+    <div ng-app="donationApp" ng-controller="donationCtrl" class="lyear-layout-web">
+        <div class="lyear-layout-container">
+            <aside class="lyear-layout-sidebar">
+                <ul class="nav nav-drawer">
+                    <li> <a ng-href="{{'./fundraiser.html?'+paraminit[1]}}">Back</a> </li>
+                </ul>
+            </aside>
+            <header class="lyear-layout-header">
+                <nav class="navbar navbar-default">
+                    <div class="topbar">
+                        <div class="topbar-left">
+                            <span class="navbar-page-title">search fundraisers</span>
+                        </div>
+                    </div>
+                </nav>
+            </header>
+            <main class="main" style="display: flex;">
+                <div class="row">
+                    <div style="display: flex;">
+                        <div style="width: 50%;display: flex;flex-direction: column;padding: 20px;">
+                            <div class="box1" style="font-weight: bold;">
+                                details of the selected fundraiser
+                            </div>
+                            <div class="box1">
+                                <label>FUNDRAISER_ID:</label>
+                                <span>{{param.FUNDRAISER_ID}}</span>
+                            </div>
+                            <div class="box1">
+                                <label>ORGANIZER:</label>
+                                <span id="">{{param.ORGANIZER}}</span>
+                            </div>
+                            <div class="box1">
+                                <label>CAPTION:</label>
+                                <span id="">{{param.CAPTION}}</span>
+                            </div>
+                            <div class="box1">
+                                <label>TARGET_FUNDING:</label>
+                                <span id="">{{param.TARGET_FUNDING}}</span>
+                            </div>
+                            <div class="box1">
+                                <label>CURRENT_FUNDING:</label>
+                                <span id="">{{param.CURRENT_FUNDING}}</span>
+                            </div>
+                            <div class="box1">
+                                <label>CITY:</label>
+                                <span id="">{{param.CITY}}</span>
+                            </div>
+                            <div class="box1">
+                                <label>ACTIVE:</label>
+                                <span id="">{{param.ACTIVE}}</span>
+                            </div>
+                            <div class="box1">
+                                <label>CATEGORY_ID:</label>
+                                <span id="">{{param.CATEGORY_ID}}</span>
+                            </div>
+                            <div>
+                                <img ng-src="{{'./images/' + param.FUNDRAISER_ID + '.jpg'}}" alt=""
+                                    style="width: 400px;height: 100%;">
+                            </div>
+                        </div>
+
+                        <div style="width: 50%;padding: 50px;">
+                            <form novalidate>
+                                donation Name:<br>
+                                <input type="text" ng-model="name"><br>
+                                donation money:<br>
+                                <input type="text" ng-model="money">
+                                <br>
+                                <br>
+                                <button ng-click="add()">Submit my donation</button>
+                                <a id="goback" ng-href="{{'./fundraiser.html?'+paraminit[1]}}" style="display: none;"></a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var app = angular.module('donationApp', []);
+        app.controller('donationCtrl', function ($scope, $http) {
+            $scope.paraminit = location.search ? location.search.split('?') : ''
+
+            $http.get(`http://localhost:9001/api/getFundraisersListByFUNDRAISERID?FUNDRAISER_ID=${$scope.paraminit[1]}`)
+                .success(function (response) {
+                    $scope.param = response[0];
+                });
+            $scope.goback = function () {
+
+            }
+            $scope.add = function () {
+                if (!$scope.name) {
+                    alert('donation name is must')
+                    return;
+                }
+                if ($scope.money < 5) {
+                    alert('the minimum of donation is 5 AUD')
+                    return;
+                }
+                $http.post(`http://localhost:9001/api/addDonations`, {
+                    "DATE": new Date().getTime(),
+                    "AMOUNT": $scope.money,
+                    "name": $scope.name,
+                    "FUNDRAISER_ID": $scope.paraminit[1]
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .success(function (response) {
+                        alert(`感谢您向${$scope.paraminit[1]}捐款`)
+                        document.getElementById('goback').click()
+                    });
+            }
+        });
+
+    </script>
+</body>
+
+</html>
