@@ -1,7 +1,14 @@
 
 var app = require("express").Router();
 const DBPool = require('./crowdfunding_db.js')
-
+// test cpanel
+app.get("/api/", (req, res) => {
+    let searchSql = 'SELECT * from `CATEGORY`'
+    DBPool.query(searchSql, [], (results) => {
+        let result = results.results
+        res.send(result);
+    })
+});
 // delete fundraiser
 app.delete('/api/deleteFundraiser', (req, res) => {
     let param = req.query
