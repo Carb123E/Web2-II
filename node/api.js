@@ -14,6 +14,16 @@ app.post('/api/addFundraiser', (req, res) => {
         });
     })
 });
+// update fundraiser
+app.put('/api/updateFundraiser', (req, res) => {
+    let param = req.body
+	DBPool.query('UPDATE FUNDRAISER SET ? WHERE ID = ?', [param, param.ID], (results) => {
+		let result = results.results
+		res.send({
+            res: 'success！'
+        })
+	})
+});
 // all fundraisers
 app.get('/api/getFundraisersList', (req, res) => {
     let searchSql = 'SELECT * from `FUNDRAISER` order by ID DESC'
