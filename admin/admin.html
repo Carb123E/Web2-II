@@ -39,10 +39,11 @@
             </header>
             <main class="main">
                 <div class="row" style="display: flex;">
-                    <div style="width: 60%;">
+                    <div style="width: 65%;overflow: auto;height: 85vh;">
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <th>UPDATE</th>
                                     <th>FUNDRAISER_ID</th>
                                     <th>ORGANIZER</th>
                                     <th>CAPTION</th>
@@ -55,6 +56,10 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="item in list">
+                                    <td>
+                                        <button type="button" ng-click="updatebefore(item)"
+                                            class="btn btn-primary ajax-post">UPDATE</button>
+                                    </td>
                                     <td>{{item.FUNDRAISER_ID}}
                                     </td>
                                     <td>{{item.ORGANIZER}}</td>
@@ -64,11 +69,12 @@
                                     <td>{{item.CITY}}</td>
                                     <td>{{item.ACTIVE}}</td>
                                     <td>{{item.CATEGORY_ID}}</td>
+
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div style="width: 40%;margin: 20px;border: 1px solid #000;border-radius: 10px;">
+                    <div style="width: 35%;margin: 20px;border: 1px solid #000;border-radius: 10px;">
                         <div style="padding: 50px;" class="ADMINBOX">
                             <form novalidate>
                                 <div class="row">
@@ -107,7 +113,9 @@
                                     </select>
                                 </div>
                             </form>
-                            <button type="button" ng-click="Add()" class="btn btn-primary ajax-post"
+                            <button type="button" ng-show="buttontype == 'add fundraiser'" ng-click="Add()" class="btn btn-primary ajax-post"
+                                style="margin-left: 150px;">{{buttontype}}</button>
+                            <button type="button" ng-show="buttontype == 'update fundraiser'" ng-click="update()" class="btn btn-primary ajax-post"
                                 style="margin-left: 150px;">{{buttontype}}</button>
                         </div>
                     </div>
@@ -124,7 +132,7 @@
                 .success(function (response) {
                     $scope.CATEGORY_IDs = response;
                 });
-            
+
             $scope.initlist = function () {
                 $http.get(`http://localhost:9001/api/getFundraisersList`)
                     .success(function (response) {
@@ -133,7 +141,6 @@
             }
             $scope.initlist()
             $scope.Add = function () {
-                ``, ``, ``, ``, ``, ``, ``, ``
                 $http.post(`http://localhost:9001/api/addFundraiser`, {
                     "FUNDRAISER_ID": $scope.FUNDRAISER_ID,
                     "ORGANIZER": $scope.ORGANIZER,
@@ -153,8 +160,19 @@
                         $scope.initlist()
                     });
             }
+            $scope.updatebefore = function (param) {
+                $scope.FUNDRAISER_ID = param.FUNDRAISER_ID
+                $scope.ORGANIZER = param.ORGANIZER
+                $scope.CAPTION = param.CAPTION
+                $scope.TARGET_FUNDING = param.TARGET_FUNDING
+                $scope.CURRENT_FUNDING = param.CURRENT_FUNDING
+                $scope.CITY = param.CITY
+                $scope.ACTIVE = param.ACTIVE
+                $scope.CATEGORY_ID = param.CATEGORY_ID
+                $scope.ID = param.ID
+                $scope.buttontype = 'update fundraiser'
+            }
             $scope.update = function () {
-                ``, ``, ``, ``, ``, ``, ``, ``
                 $http.put(`http://localhost:9001/api/updateFundraiser`, {
                     "FUNDRAISER_ID": $scope.FUNDRAISER_ID,
                     "ORGANIZER": $scope.ORGANIZER,
@@ -164,13 +182,14 @@
                     "CITY": $scope.CITY,
                     "ACTIVE": $scope.ACTIVE,
                     "CATEGORY_ID": $scope.CATEGORY_ID,
+                    "ID": $scope.ID,
                 }, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 })
                     .success(function (response) {
-                        alert(`add success`)
+                        alert(`update success`)
                         $scope.initlist()
                     });
             }
