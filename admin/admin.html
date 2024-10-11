@@ -43,7 +43,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>UPDATE</th>
+                                    <th>OTHER</th>
                                     <th>FUNDRAISER_ID</th>
                                     <th>ORGANIZER</th>
                                     <th>CAPTION</th>
@@ -57,8 +57,8 @@
                             <tbody>
                                 <tr ng-repeat="item in list">
                                     <td>
-                                        <button type="button" ng-click="updatebefore(item)"
-                                            class="btn btn-primary ajax-post">UPDATE</button>
+                                        <button type="button" ng-click="updatebefore(item)">UPDATE</button>
+                                        <button type="button" ng-click="delete(item)">DELETE</button>
                                     </td>
                                     <td>{{item.FUNDRAISER_ID}}
                                     </td>
@@ -113,10 +113,10 @@
                                     </select>
                                 </div>
                             </form>
-                            <button type="button" ng-show="buttontype == 'add fundraiser'" ng-click="Add()" class="btn btn-primary ajax-post"
-                                style="margin-left: 150px;">{{buttontype}}</button>
-                            <button type="button" ng-show="buttontype == 'update fundraiser'" ng-click="update()" class="btn btn-primary ajax-post"
-                                style="margin-left: 150px;">{{buttontype}}</button>
+                            <button type="button" ng-show="buttontype == 'add fundraiser'" ng-click="Add()"
+                                class="btn btn-primary ajax-post" style="margin-left: 150px;">{{buttontype}}</button>
+                            <button type="button" ng-show="buttontype == 'update fundraiser'" ng-click="update()"
+                                class="btn btn-primary ajax-post" style="margin-left: 150px;">{{buttontype}}</button>
                         </div>
                     </div>
                 </div>
@@ -192,6 +192,21 @@
                         alert(`update success`)
                         $scope.initlist()
                     });
+            }
+            $scope.delete = function (row) {
+                $http.get(`http://localhost:9001/api/getDonationsByFUNDRAISERID?FUNDRAISER_ID=${row.FUNDRAISER_ID}`)
+                    .success(function (response) {
+                        if (!response.length) {
+                            $http.delete(`http://localhost:9001/api/deleteFundraiser?ID=${row.ID}`)
+                                .success(function (response) {
+                                    alert(`delete success`)
+                                    $scope.initlist()
+                                });
+                        } else {
+                            alert('Only fundraisers that do not have donations yet can be deleted')
+                        }
+                    });
+
             }
         });
 

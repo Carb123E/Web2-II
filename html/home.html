@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>home</title>
     <link href="css/style.min.css" rel="stylesheet">
+    <script type="text/javascript" src="./angular.min.js"></script>
 </head>
 
 <body>
-    <div class="lyear-layout-web">
+    <div ng-app="homeApp" ng-controller="homeCtrl" class="lyear-layout-web">
         <div class="lyear-layout-container">
             <aside class="lyear-layout-sidebar">
                 <ul class="nav nav-drawer">
@@ -22,7 +23,7 @@
                 <nav class="navbar navbar-default">
                     <div class="topbar">
                         <div class="topbar-left">
-                            <span class="navbar-page-title">Active fundraisers</span>
+                            <span class="navbar-page-title">Active fundraisers <p></p></span>
                         </div>
                     </div>
                 </nav>
@@ -45,8 +46,17 @@
                                             <th>CATEGORY_ID</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="tbody">
-                                        <!-- tbody -->
+                                    <tbody>
+                                        <tr ng-repeat="item in list">
+                                            <td>{{item.FUNDRAISER_ID}}</td>
+                                            <td>{{item.ORGANIZER}}</td>
+                                            <td>{{item.CAPTION}}</td>
+                                            <td>{{item.TARGET_FUNDING}}</td>
+                                            <td>{{item.CURRENT_FUNDING}}</td>
+                                            <td>{{item.CITY}}</td>
+                                            <td>{{item.ACTIVE}}</td>
+                                            <td>{{item.CATEGORY_ID}}</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -56,46 +66,15 @@
             </main>
         </div>
     </div>
-    <script type="text/javascript">
-        function ajax(obj) {
-            let type = obj.type;
-            let url = obj.url;
-            let callback = obj.callback;
-            let xhr = new XMLHttpRequest();
-            xhr.open(type, url);
-            xhr.send();
-            xhr.onreadystatechange = function () {
-                callback(JSON.parse(xhr.responseText));
-            }
-        }
-    </script>
-    <script type="text/javascript">
-        function init() {
-            ajax({
-                url: "http://localhost:9001/api/getFundraisersListActive?active=Active",
-                type: "get",
-                callback: function (data) {
-                    console.log(data);
-                    if (data.length) {
-                        let tbodyinnerHTML = ''
-                        data.map((item) => {
-                            tbodyinnerHTML += `<tr>
-                                <th>${item.FUNDRAISER_ID}</th>
-                                <th>${item.ORGANIZER}</th>
-                                <th>${item.CAPTION}</th>
-                                <th>${item.TARGET_FUNDING}</th>
-                                <th>${item.CURRENT_FUNDING}</th>
-                                <th>${item.CITY}</th>
-                                <th>${item.ACTIVE}</th>
-                                <th>${item.CATEGORY_ID}</th>
-                            </tr>`
-                        })
-                        document.getElementById("tbody").innerHTML = tbodyinnerHTML;
-                    }
-                }
-            });
-        }
-        init()
+    <script>
+        var app = angular.module('homeApp', []);
+        app.controller('homeCtrl', function ($scope, $http) {
+            $http.get("http://localhost:9001/api/getFundraisersListActive?active=Active")
+                .success(function (response) {
+                    $scope.list = response;
+                    console.log($scope.list);
+                });
+        });
     </script>
 </body>
 

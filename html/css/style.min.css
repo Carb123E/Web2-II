@@ -4542,3 +4542,10 @@ body[data-theme='translucent'] .jconfirm {
 [data-sidebarbg*='color_'] .nav-drawer > .active > a:active {
     border-color: rgba(255, 255, 255, .35);
 }
+
+.main{
+    width: calc(100% - 240px);
+    margin-left: 240px;
+    padding: 20px;
+    margin-top: 60px;
+}
